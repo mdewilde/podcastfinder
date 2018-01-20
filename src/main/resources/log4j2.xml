@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Configuration status="WARN" monitorInterval="60">
+
+	<Appenders>
+
+    	<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%m%n" />
+<!-- 			<PatternLayout pattern="%d{ABSOLUTE} %c %t %m%n" /> -->
+		</Console>
+
+		<RollingRandomAccessFile
+				name="podcastfinder"
+				fileName="${sys:user.home}/podcastfinder/podcastfinder.log"
+				filePattern="${sys:user.home}/podcastfinder/podcastfinder.log.%d{yyyy-MM-dd}">
+			<PatternLayout pattern="%d{ABSOLUTE} %c %t %m%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy/>
+			</Policies>
+		</RollingRandomAccessFile>
+
+		<RollingRandomAccessFile
+				name="podcastparser"
+				fileName="${sys:user.home}/podcastfinder/podcastparser.log"
+				filePattern="${sys:user.home}/podcastfinder/podcastparser.log.%d{yyyy-MM-dd}">
+			<PatternLayout pattern="%m%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy/>
+			</Policies>
+		</RollingRandomAccessFile>
+		
+		<RollingRandomAccessFile
+				name="queuelogger"
+				fileName="${sys:user.home}/podcastfinder/queuelogger.log"
+				filePattern="${sys:user.home}/podcastfinder/queuelogger.log.%d{yyyy-MM-dd}">
+			<PatternLayout pattern="%d{ABSOLUTE} %m%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy/>
+			</Policies>
+		</RollingRandomAccessFile>
+
+	</Appenders>
+
+	<Loggers>
+	
+		<Logger name="be.ceau.podcastfinder" level="TRACE" includeLocation="false" additivity="false">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="podcastfinder" />
+		</Logger>
+
+		<Logger name="be.ceau.podcastparser" level="TRACE" includeLocation="false" additivity="true">
+			<AppenderRef ref="podcastparser" />
+		</Logger>
+
+		<Logger name="be.ceau" level="INFO" includeLocation="false" additivity="false">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="podcastfinder" />
+		</Logger>
+
+		<Logger name="queuelogger" level="TRACE" includeLocation="false" additivity="false">
+			<AppenderRef ref="queuelogger" />
+		</Logger>
+
+		<Root level="WARN">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="podcastfinder" />
+		</Root>
+
+	</Loggers>
+
+</Configuration>
