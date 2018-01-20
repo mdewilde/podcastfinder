@@ -35,6 +35,10 @@ This will create a new sqlite database in your home directory, and add podcasts 
 
 Take a look at packages `be.ceau.podcastfinder.action.api` and  `be.ceau.podcastfinder.action.impl`. For examples of how these methods can be called, look at `be.ceau.podcastfinder.cl.PodcastfinderCl`.
 
+### Download JAR
+
+Download a compiled jar with dependencies from the [releases page](https://github.com/mdewilde/podcastfinder/releases).
+
 ### GnuPG public key
 Verify signature files with my [GnuPG public key](https://www.ceau.be/pubkey.gpg).
 

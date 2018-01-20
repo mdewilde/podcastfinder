@@ -6,9 +6,6 @@
 	<version>1.0</version>
 	<name>Podcastfinder</name>
 	<description>Podcastfinder is a Java application for finding podcast feed URLs</description>
-	<prerequisites>
-		<maven>3.0</maven>
-	</prerequisites>
 	<url>https://github.com/mdewilde/podcastfinder</url>
 	<developers>
 		<developer>
