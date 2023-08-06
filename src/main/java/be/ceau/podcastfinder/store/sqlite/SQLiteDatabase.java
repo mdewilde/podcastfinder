@@ -15,6 +15,7 @@
 */
 package be.ceau.podcastfinder.store.sqlite;
 
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,14 +34,11 @@ class SQLiteDatabase implements AutoCloseable {
 
 	private static final Logger logger = LoggerFactory.getLogger(SQLiteDatabase.class);
 
-	private static final String CREATE_TABLE_PODCASTS =
-			"CREATE TABLE IF NOT EXISTS podcasts (uri TEXT NOT NULL UNIQUE, name TEXT, language TEXT, description TEXT, insertDate TEXT, podcastId INTEGER PRIMARY KEY NOT NULL)";
+	private static final String CREATE_TABLE_PODCASTS = "CREATE TABLE IF NOT EXISTS podcasts (uri TEXT NOT NULL UNIQUE, name TEXT, language TEXT, description TEXT, insertDate TEXT, podcastId INTEGER PRIMARY KEY NOT NULL)";
 
-	private static final String CREATE_TABLE_STATUS =
-			"CREATE TABLE IF NOT EXISTS status (podcastId INTEGER NOT NULL, date TEXT NOT NULL, items INTEGER, lastUpdate TEXT, hash INTEGER, bytes INTEGER, FOREIGN KEY(podcastId) REFERENCES podcasts(podcastId))";
+	private static final String CREATE_TABLE_STATUS = "CREATE TABLE IF NOT EXISTS status (podcastId INTEGER NOT NULL, date TEXT NOT NULL, items INTEGER, lastUpdate TEXT, hash INTEGER, bytes INTEGER, FOREIGN KEY(podcastId) REFERENCES podcasts(podcastId))";
 
-	private static final String CREATE_TABLE_ERRORS =
-			"CREATE TABLE IF NOT EXISTS errors (podcastId INTEGER NOT NULL, date TEXT NOT NULL, error TEXT NOT NULL, message TEXT NOT NULL, FOREIGN KEY(podcastId) REFERENCES podcasts(podcastId))";
+	private static final String CREATE_TABLE_ERRORS = "CREATE TABLE IF NOT EXISTS errors (podcastId INTEGER NOT NULL, date TEXT NOT NULL, error TEXT NOT NULL, message TEXT NOT NULL, FOREIGN KEY(podcastId) REFERENCES podcasts(podcastId))";
 
 	private final SQLiteDataSource ds;
 	private final Handle handle;
@@ -78,8 +76,12 @@ class SQLiteDatabase implements AutoCloseable {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private String getUrl() {
+		Path directory = Path.of(System.getProperty("user.home")).resolve("podcastfinder");
+		if (!directory.toFile().exists() && !directory.toFile().mkdirs()) {
+			throw new IllegalStateException("directory " + directory + " does not exist and could not be created");
+		}
 		return new StringBuilder()
 				.append("jdbc:sqlite:")
 				.append(System.getProperty("user.home"))
@@ -102,7 +104,7 @@ class SQLiteDatabase implements AutoCloseable {
 			LOCK.unlock();
 		}
 	}
-	
+
 	void execute(Consumer<Handle> consumer) {
 		LOCK.lock();
 		try {
@@ -116,7 +118,7 @@ class SQLiteDatabase implements AutoCloseable {
 		LOCK.lock();
 		try {
 			users--;
-			if (users == 0) { 
+			if (users == 0) {
 				try {
 					connection.close();
 				} catch (SQLException e) {
